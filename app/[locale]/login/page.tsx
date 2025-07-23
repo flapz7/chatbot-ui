@@ -108,7 +108,6 @@ export default async function Login({
       ? emailWhitelistPatternsString?.split(",")
       : []
 
-    // If there are whitelist patterns, check if the email is allowed to sign up
     if (emailDomainWhitelist.length > 0 || emailWhitelist.length > 0) {
       const domainMatch = emailDomainWhitelist?.includes(email.split("@")[1])
       const emailMatch = emailWhitelist?.includes(email)
@@ -124,11 +123,7 @@ export default async function Login({
 
     const { error } = await supabase.auth.signUp({
       email,
-      password,
-      options: {
-        // USE IF YOU WANT TO SEND EMAIL VERIFICATION, ALSO CHANGE TOML FILE
-        // emailRedirectTo: `${origin}/auth/callback`
-      }
+      password
     })
 
     if (error) {
@@ -137,9 +132,6 @@ export default async function Login({
     }
 
     return redirect("/setup")
-
-    // USE IF YOU WANT TO SEND EMAIL VERIFICATION, ALSO CHANGE TOML FILE
-    // return redirect("/login?message=Check email to continue sign in process")
   }
 
   const handleResetPassword = async (formData: FormData) => {
@@ -169,45 +161,35 @@ export default async function Login({
       >
         <Brand />
 
-        <Label className="text-md mt-4" htmlFor="email">
-          Email
+        <Label className="text-md mt-4" htmlFor="userSelector">
+          Select User
         </Label>
-        <Input
+        <select
           className="mb-3 rounded-md border bg-inherit px-4 py-2"
-          name="email"
-          placeholder="you@example.com"
-          required
-        />
-
-        <Label className="text-md" htmlFor="password">
-          Password
-        </Label>
-        <Input
-          className="mb-6 rounded-md border bg-inherit px-4 py-2"
-          type="password"
-          name="password"
-          placeholder="••••••••"
-        />
-
-        <SubmitButton className="mb-2 rounded-md bg-blue-700 px-4 py-2 text-white">
-          Login
-        </SubmitButton>
-
-        <SubmitButton
-          formAction={signUp}
-          className="border-foreground/20 mb-2 rounded-md border px-4 py-2"
+          name="userSelector"
+          onChange={(e) => {
+            const emailInput = document.querySelector<HTMLInputElement>('input[name="email"]');
+            if (emailInput) emailInput.value = e.target.value;
+          }}
         >
-          Sign Up
-        </SubmitButton>
+          <option value="">-- Choose a user --</option>
+          <option value="admin@ubi.local">Admin</option>
+          <option value="guest1@ubi.local">Guest 1</option>
+          <option value="guest2@ubi.local">Guest 2</option>
+        </select>
+
+        <Label className="text-md" htmlFor="email">Email</Label>
+        <Input className="mb-3 rounded-md border bg-inherit px-4 py-2" name="email" placeholder="you@example.com" required />
+
+        <Label className="text-md" htmlFor="password">Password</Label>
+        <Input className="mb-6 rounded-md border bg-inherit px-4 py-2" type="password" name="password" placeholder="••••••••" />
+
+        <SubmitButton className="mb-2 rounded-md bg-blue-700 px-4 py-2 text-white">Login</SubmitButton>
+        <SubmitButton formAction={signUp} className="border-foreground/20 mb-2 rounded-md border px-4 py-2">Sign Up</SubmitButton>
 
         <div className="text-muted-foreground mt-1 flex justify-center text-sm">
           <span className="mr-1">Forgot your password?</span>
-          <button
-            formAction={handleResetPassword}
-            className="text-primary ml-1 underline hover:opacity-80"
-          >
-            Reset
-          </button>
+          <button formAction={handleResetPassword} className="text-primary ml-1 underline hover:opacity-80">Reset</button>
         </div>
 
         {searchParams?.message && (
