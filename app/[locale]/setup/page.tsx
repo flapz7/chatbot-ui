@@ -245,7 +245,7 @@ export default function SetupPage() {
   }
 
   if (loading) {
-    return null
+    return <div style={{ color: "white", padding: "2rem" }}>Loading setup page...</div>
   }
 
   return (
