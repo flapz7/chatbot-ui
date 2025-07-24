@@ -42,7 +42,7 @@ export default async function Login({
       .maybeSingle()
 
     if (!homeWorkspace) {
-      throw new Error(error.message)
+      throw new Error(error?.message || "找不到工作區")
     }
 
     return redirect(`/${homeWorkspace.id}/chat`)
