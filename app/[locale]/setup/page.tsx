@@ -92,7 +92,7 @@ export default function SetupPage() {
               user_id: user.id,
               name: "My Workspace",
               is_home: true
-            } as TablesInsert<"workspaces">)
+            })
             .select()
             .single()
         }
