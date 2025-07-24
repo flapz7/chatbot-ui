@@ -73,9 +73,7 @@ export default async function Login({
       .maybeSingle()
 
     if (!homeWorkspace) {
-      throw new Error(
-        homeWorkspaceError?.message || "An unexpected error occurred"
-      )
+      return redirect("/setup")
     }
 
     return redirect(`/${homeWorkspace.id}/chat`)
