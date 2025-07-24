@@ -88,11 +88,13 @@ export default function SetupPage() {
           // ✅ 自動建立主工作區
           const { data: newWorkspace } = await supabase
             .from("workspaces")
-            .insert({
-              user_id: user.id,
-              name: "My Workspace",
-              is_home: true
-            })
+            .insert([
+              {
+                user_id: user.id,
+                name: "My Workspace",
+                is_home: true
+              }
+            ])
             .select()
             .single()
         }
