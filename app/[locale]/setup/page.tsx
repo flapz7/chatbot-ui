@@ -70,7 +70,33 @@ export default function SetupPage() {
       } else {
         const user = session.user
 
-        const profile = await getProfileByUserId(user.id)
+        let profile = await getProfileByUserId(user.id)
+
+        if (!profile) {
+          // 建立初始 profile（用戶剛註冊但尚未建立 profile）
+          const { data: newProfile } = await supabase
+            .from("profiles")
+            .insert({
+              user_id: user.id,
+              has_onboarded: false
+            })
+            .select()
+            .single()
+
+          profile = newProfile
+
+          // ✅ 自動建立主工作區
+          const { data: newWorkspace } = await supabase
+            .from("workspaces")
+            .insert({
+              user_id: user.id,
+              name: "My Workspace",
+              is_home: true
+            })
+            .select()
+            .single()
+        }
+
         setProfile(profile)
         setUsername(profile.username)
 
