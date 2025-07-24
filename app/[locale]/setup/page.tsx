@@ -11,7 +11,7 @@ import {
   fetchOpenRouterModels
 } from "@/lib/models/fetch-models"
 import { supabase } from "@/lib/supabase/browser-client"
-import { TablesUpdate } from "@/supabase/types"
+import { TablesUpdate, TablesInsert } from "@/supabase/types"
 import { useRouter } from "next/navigation"
 import { useContext, useEffect, useState } from "react"
 import { APIStep } from "../../../components/setup/api-step"
@@ -92,7 +92,7 @@ export default function SetupPage() {
               user_id: user.id,
               name: "My Workspace",
               is_home: true
-            })
+            } as TablesInsert<"workspaces">)
             .select()
             .single()
         }
